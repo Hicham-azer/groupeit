@@ -92,9 +92,9 @@ public class ProductDao {
             }
             return result;
     		}
-public int UpdateOrder_Line(int order_id) {
+public int UpdateOrder_Line(int order_id,int Groupe_id) {
     	
-    	String Update_sql = " Update orders set Order_Statue = 'CONFIRMED'  where  Id_commande = ? ";           
+    	String Update_sql = " Update orders set Order_Statue = 'CONFIRMED' , Groupe_id = ? where  Id_commande = ? ";           
     		int result=0;
     	
     		
@@ -113,7 +113,9 @@ public int UpdateOrder_Line(int order_id) {
             	
             
               
-                preparedStatement.setInt(1, order_id);
+                
+                preparedStatement.setInt(1,Groupe_id );
+                preparedStatement.setInt(2,order_id);
                 
                 
 
@@ -624,10 +626,10 @@ public int UpdateOrder_Line(int order_id) {
     
     
     
-    public int CheckGroupeId(Float total,int City_id){
+    public int CheckGroupeId(int City_id){
 		String Search_groupe = "Select * from groupes where City_id = ? and G_total < 5000 " ;
 		int Groupe_id = 0 ;
-		try {
+		try {		
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -640,12 +642,11 @@ public int UpdateOrder_Line(int order_id) {
             // Step 2:Create a statement using connection object
             PreparedStatement preparedStatement = connection.prepareStatement(Search_groupe)) {
         	preparedStatement.setInt(1,City_id);
-        	preparedStatement.setFloat(2,total);
         	ResultSet rs = preparedStatement.executeQuery();
         	
         	while(rs.next())
         	{
-        	Groupe_id = rs.getInt(Groupe_id);
+        	Groupe_id = rs.getInt("Groupe_id");
         	}
             System.out.println(preparedStatement);
             // Step 3: Execute the query or update query
@@ -658,11 +659,13 @@ public int UpdateOrder_Line(int order_id) {
        
         return Groupe_id;
 		}
+    	
     
- /*   public int AddGroupe(int City_id) throws ClassNotFoundException{
-		String Add_Product = " insert into groupes(G_Total,City_id) values (0,) " ;
+    	public int AddGroupe(int City_id) throws ClassNotFoundException{
+		String Add_Groupe = " insert into groupes(G_Total,City_id) values (?,?) " ;
 		
 		int result = 0;
+		Float price = (float) 0;
 	
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -675,9 +678,9 @@ public int UpdateOrder_Line(int order_id) {
             .getConnection("jdbc:mysql://localhost:3306/stockindb?useSSL=false&serverTimezone=UTC", "root", "root");
         	
             // Step 2:Create a statement using connection object
-            PreparedStatement preparedStatement = connection.prepareStatement(Add_Product)) {
-        	preparedStatement.setInt(1,User_id);
-        	
+            PreparedStatement preparedStatement = connection.prepareStatement(Add_Groupe)) {
+        	preparedStatement.setFloat(1,price);
+        	preparedStatement.setInt(2,City_id);
         	result =preparedStatement.executeUpdate();
        
         	
@@ -691,8 +694,43 @@ public int UpdateOrder_Line(int order_id) {
             printSQLException(e);
         }
         	return result;
-		} */
+		} 
+    	
+    	public int UpdateGroupe(int groupe_id,Float Total) {
+        	
+        	String Update_sql = " Update groupes set G_total = G_total + ?   where  Groupe_id = ? ";           
+        		int result=0;
+        	
+        		
+        		try {
+    				Class.forName("com.mysql.jdbc.Driver");
+    			} catch (ClassNotFoundException e1) {
+    				// TODO Auto-generated catch block
+    				e1.printStackTrace();
+    			}
+                
+                try (Connection connection = DriverManager
+                    .getConnection("jdbc:mysql://localhost:3306/stockindb?useSSL=false&serverTimezone=UTC", "root", "root");
 
+                    // Step 2:Create a statement using connection object
+                    PreparedStatement preparedStatement = connection.prepareStatement(Update_sql)) {
+                	
+                
+                  
+                    preparedStatement.setFloat(1,Total);
+                    preparedStatement.setInt(2,groupe_id);
+                    
+
+                    System.out.println(preparedStatement);
+                    // Step 3: Execute the query or update query
+                    result = preparedStatement.executeUpdate();
+
+                } catch (SQLException e) {
+                    // process sql exception
+                    printSQLException(e);
+                }
+                return result;
+        		}
     
     
     private void printSQLException(SQLException ex) {

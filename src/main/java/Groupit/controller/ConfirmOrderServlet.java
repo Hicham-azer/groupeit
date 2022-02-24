@@ -39,7 +39,7 @@ public class ConfirmOrderServlet extends HttpServlet {
 		int Order_id=Integer.parseInt( request.getParameter("order_id"));
 		users user = new users();
 		
-		prodao.UpdateOrder_Line(Order_id);
+		
 		try {
 			user = logindao.GetUser(User_id);
 		} catch (ClassNotFoundException e) {
@@ -47,9 +47,29 @@ public class ConfirmOrderServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		 //int city = user.getCity_id();
-		//float total= prodao.Total_id(Order_id);
-		//int Groupe_id = prodao.CheckGroupeId(total, city);
+		
+		int city = user.getCity_id();
+		float total= prodao.Total_id(Order_id);
+		int Groupe_id = prodao.CheckGroupeId(city);
+		
+		if (Groupe_id == 0) {
+			try {
+				prodao.AddGroupe(city);
+				int G_id = prodao.CheckGroupeId(city);
+				prodao.UpdateOrder_Line(Order_id,G_id);
+				prodao.UpdateGroupe(G_id,total);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+		}else {
+			prodao.UpdateOrder_Line(Order_id,Groupe_id);
+			prodao.UpdateGroupe(Groupe_id,total);
+		}
 		
 		
 		
@@ -57,6 +77,7 @@ public class ConfirmOrderServlet extends HttpServlet {
 		//if so add order to groupe
 		// if not create groupe with new city 
 		// add order to new groupe
+		
 		
 		request.setAttribute("user_id",User_id);
 	    request.getRequestDispatcher("MyShoppingCart").forward(request, response);
