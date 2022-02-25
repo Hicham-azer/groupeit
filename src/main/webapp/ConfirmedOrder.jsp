@@ -70,7 +70,7 @@
                 <img src="images/inconnu.jpg" alt="My Image" class="profileImage">
                 <h4 class="userName">${user.getFirstname()}</h4>
             </div>
-          <a href="<%= request.getContextPath() %>/MyAccount1?user_id=${user.getUser_id()}" class="SideBarItems "><i class="far fa-user-circle"></i> <span>Account</span></a>
+            <a href="<%= request.getContextPath() %>/MyAccount1?user_id=${user.getUser_id()}" class="SideBarItems "><i class="far fa-user-circle"></i> <span>Account</span></a>
             <a href="<%= request.getContextPath() %>/MyShoppingCart?user_id=${user.getUser_id()}" class="SideBarItems "><i class="fas fa-shopping-cart"></i> <span>My Orders on Hold</span></a>
             <a href="<%= request.getContextPath() %>/Confirmedorder?user_id=${user.getUser_id()}" class="SideBarItems "><i class="fas fa-tag"></i> <span>My Confirmed Orders</span></a>
             <a href="" class="SideBarItems "><i class="far fa-heart"></i> <span>My WishList</span></a>
@@ -81,10 +81,10 @@
         <div class="container">
             
             <div class="TitlesDiv">
-                <h4 class="tableTitle">My shopping cart </h4>
+                <h4 class="tableTitle">My Confirmed Orders </h4>
             </div>
 					
-                <h5 class="tableTitle" style="color: blue;" align="right"> Order Tracking Id :# ${order_id} </h5>
+                <h5 class="tableTitle" style="color:black;" align="right"> Number of orders : ${total_orders} </h5>
             
             <div class="tableContainer">
 
@@ -92,70 +92,38 @@
 
                     <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Unit-Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
+                            <th>Order ID</th>
                             <th>Date</th>
-                            <th class="DeleteCase">Delete</th>
+                            <th>Order Status</th>
+                            <th>Order's Group</th>
+                            <th>Total</th>
+                           
                         </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${Orders}" var="order">
+                    <c:forEach items="${orders}" var="order">
                         <tr>
-                            <td>
-                                <img src="P_image.jsp?Product_id=${order.getProduct_id()}" alt="Product image" class="productImage">
-                                <span class="productName">${order.getP_name()}</span>
-                            </td>
-                            <td class="Price">${order.getUnit_Price()}</td>
-                            <td class="Quantity">${order.getQunatity()}</td>
+                          
+             				<td class="Price">${order.getOrder_id()}</td>
+                           	<td class="Price">${order.getOrder_Date()}</td>
+                            <td class="Quantity">${order.getOrder_Statue()}</td>
+                            <td class="Quantity">${order.getGroupe_id()}</td>
                             <td class="Total">${order.getPrice()}</td>
-                            <td>${order.getDate()}</td>
-                            <td class="DeleteData"><button class="deletebtn" onclick="deletePopUp(${order.getProduct_id()},${order_id})"><i class="fas fa-trash-alt"></i></button></td>
+                            
+           
                         </tr>
                        </c:forEach>
                     </tbody>
     				<tfoot>
-    					<tr>
-    					    <td> </td>
-    					    <td> </td>
-    						<td class="Total" style="color: red;"> &nbsp; Total Order : ${Total}   Dhs</td>
-    						
-    					</tr>
+    				<tr>
+    				
+    				</tr>
     					
     				</tfoot>
                 </table>
 				
             </div>
-         <div class="container">
-            <div class="deleteProductPopUp col-lg-6">
-            <script type="text/javascript">
-            document.querySelector(".deleteProductPopUp").addEventListener("click", function(){
-            document.querySelector(".deleteProductPopUp").classList.remove("active");
-            })
-            </script>
-                <p>Sure you want to delete this product ?</p>
-                <form id="form1" method="post" action="<%= request.getContextPath() %>/UpdateMyCardServlet?user_id=${user.getUser_id()}">
-                <input type="hidden" id="P_id" name="P_id" value="">
-                <input type="hidden" id="order_id" name="order_id" value="">
-                <button form="form1" type="submit" class="yesBtn btns" >Yes</button>
-                </form>
-                <hr class="HorizontalLine"> 
-                <div><button class="noBtn btns">No</button></div> 
-            </div>
-        </div>
-			
-			<div class="TitlesDiv" >
-			
-                <button class="addProductButton" style="color: green;" onclick="location.href='<%= request.getContextPath() %>/ConfirmOrder?order_id=${order_id}&user_id=${user.getUser_id()}'" id="AddProductWindow"><i class="fas fa-check-circle"></i> Deliver Order </button>
-            </div>
-            
-            <div class="">
-
-                <h6 style="color: red">Warning : Your Order will be delivered by default to the address entered in the signup form , visit your account for any modification .</h6> 
-            </div>
-
-        </div>
+         
 	<div class="userPopUp">
 
                 <div class="profileImageDiv">
@@ -182,7 +150,7 @@
             </div>
             
 
-        </div>
+        
         
             
         

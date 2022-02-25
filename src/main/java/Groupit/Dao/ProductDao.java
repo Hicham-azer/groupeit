@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import Groupit.model.Gorder;
 import Groupit.model.Order;
 import Groupit.model.Product;
 
@@ -320,7 +321,6 @@ public int UpdateOrder_Line(int order_id,int Groupe_id) {
     public Float Total_id(int commande_id){
 		String Total_sql = "select sum(Price) as Total from order_line where Id_commande = ? " ;
 		Float total = Float.parseFloat("0");
-		ArrayList<Order> General_Order= new ArrayList<Order>();
 	
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -349,8 +349,41 @@ public int UpdateOrder_Line(int order_id,int Groupe_id) {
             // process sql exception
             printSQLException(e);
         }
-        if (General_Order. isEmpty())
-        	System.out.println("list is empty");
+      
+        return total;
+		}
+    public int count_orders(int user_id){
+		String Total_sql = "select count(id_commande) as count from Orders where user_id = ? " ;
+		int total = 0;
+	
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+        try (Connection connection = DriverManager
+            .getConnection("jdbc:mysql://localhost:3306/stockindb?useSSL=false&serverTimezone=UTC", "root", "root");
+
+            // Step 2:Create a statement using connection object
+            PreparedStatement preparedStatement = connection.prepareStatement(Total_sql)) {
+        	preparedStatement.setInt(1, user_id);
+        	
+        	 ResultSet  rs = preparedStatement.executeQuery();
+            System.out.println(preparedStatement);
+            // Step 3: Execute the query or update query
+           while (rs.next())
+           {
+        	   total = rs.getInt("count");
+           }
+           
+            
+        } catch (SQLException e) {
+            // process sql exception
+            printSQLException(e);
+        }
+      
         return total;
 		}
     public Product GetProduct(int Product_id){
@@ -555,6 +588,47 @@ public int UpdateOrder_Line(int order_id,int Groupe_id) {
         	return result;
 		}
    
+    
+    public ArrayList<Gorder> GetOrdersByID(int user_id) throws ClassNotFoundException{
+		String GetOrdersByID = " select * from Orders where Order_Statue like 'CONFIRMED' and User_id = ?  " ;
+		ArrayList<Gorder> General_Order= new ArrayList<Gorder>();
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+        try (Connection connection = DriverManager
+            .getConnection("jdbc:mysql://localhost:3306/stockindb?useSSL=false&serverTimezone=UTC", "root", "root");
+        	
+            // Step 2:Create a statement using connection object
+            PreparedStatement preparedStatement = connection.prepareStatement(GetOrdersByID)) {
+        	preparedStatement.setInt(1,user_id);
+      
+        	
+        	ResultSet rs =preparedStatement.executeQuery();
+        	while(rs.next())
+        	{
+        	Gorder order = new Gorder();
+        	order.setOrder_id(rs.getInt("id_commande"));
+        	order.setOrder_Date(rs.getString("Order_Date"));
+        	order.setPrice(Total_id(order.getOrder_id()));
+        	order.setOrder_Statue(rs.getString("Order_Statue"));
+        	order.setGroupe_id(rs.getInt("Groupe_id"));
+        	General_Order.add(order);
+        	}
+            System.out.println(preparedStatement);
+            
+
+        } catch (SQLException e) {
+            // process sql exception
+            printSQLException(e);
+        }
+        	return General_Order;
+		}
+    
     
     public int AddProductToOrder(int commande_id,int Product_id,int Quantity_Ordred,Float price) throws ClassNotFoundException{
 		String Add_Product = " insert into order_line(id_commande,Product_id,Quantity_Ordred,Price,Line_date) values (? ,? ,?,?,CURRENT_TIMESTAMP())" ;

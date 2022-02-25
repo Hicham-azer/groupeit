@@ -8,7 +8,7 @@ private Float Unit_Price ;
 private int Qunatity ;
 private Float Price;
 private String Date ;
-private int Groupe_id;
+
 
 public int getProduct_id() {
 	return Product_id;
@@ -52,12 +52,5 @@ public int getOrder_id() {
 public void setOrder_id(int order_id) {
 	this.order_id = order_id;
 }
-public int getGroupe_id() {
-	return Groupe_id;
-}
-public void setGroupe_id(int groupe_id) {
-	Groupe_id = groupe_id;
-}
-
 
 }

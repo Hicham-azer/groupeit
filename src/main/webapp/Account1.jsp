@@ -70,7 +70,7 @@
             </div>
             <a href="<%= request.getContextPath() %>/MyAccount1?user_id=${user.getUser_id()}" class="SideBarItems "><i class="far fa-user-circle"></i> <span>Account</span></a>
             <a href="<%= request.getContextPath() %>/MyShoppingCart?user_id=${user.getUser_id()}" class="SideBarItems "><i class="fas fa-shopping-cart"></i> <span>My Orders on Hold</span></a>
-            <a href="" class="SideBarItems "><i class="fas fa-tag"></i> <span>My Confirmed Orders</span></a>
+            <a href="<%= request.getContextPath() %>/Confirmedorder?user_id=${user.getUser_id()}" class="SideBarItems "><i class="fas fa-tag"></i> <span>My Confirmed Orders</span></a>
             <a href="" class="SideBarItems "><i class="far fa-heart"></i> <span>My WishList</span></a>
             <a href="" class="SideBarItems "><i class="far fa-chart-bar"></i> <span>My History</span></a>
             <a href="" class="SideBarItems "><i class="fas fa-truck"></i> <span>Track my Orders</span></a>
